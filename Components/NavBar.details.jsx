@@ -5,7 +5,7 @@ export default function NavBar(props){
     let {type, value, page} = props.router.query
     if(page === undefined){page = 1}
     return(
-        <VStack w={"100vw"} background={"black"} paddingBottom={"20px"} borderBottomRadius={"10px"} mb={props.mb}>
+        <VStack background={"black"} paddingBottom={"20px"} borderBottomRadius={"10px"} mb={props.mb}>
             <Link href="/"><Image src="/media/images/logo.png" alt="logo" mb={"1rem"} /></Link>
             <Link href={`/search?type=${type}&value=${value}&page=${page}`} passHref>
                 <Flex alignItems={"center"} gap={"10px"}>

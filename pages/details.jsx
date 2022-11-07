@@ -66,7 +66,7 @@ export default function Details(){
                 {
                     details !== "loading" // Affiche les infos
                     ? <Box>
-                        <Heading textAlign={"center"} mb={"1rem"}>{details.name}</Heading>
+                        <Heading fontFamily="Finger Paint" textAlign={"center"} mb={"1.5rem"}>{details.name}</Heading>
                         <Image borderRadius={"25% 10%"} src={image} alt="image" w={["90vw","90vw","25vw"]} marginInline={"auto"} mb={"1.5rem"} fallbackSrc="/media/images/loading_icon.gif"/>
                         <Table w={"90vw"} overflow={"hidden"} marginInline="auto" mb={"2rem"}>
                             <Tbody>

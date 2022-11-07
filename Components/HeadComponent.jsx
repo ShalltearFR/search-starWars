@@ -3,7 +3,7 @@ import Head from "next/head";
 export default function HeadComponent(props){
     return(
         <Head>
-            <title>Search {props.title}</title>
+            <title>{`Search ${props.title}`}</title>
             <meta name="title" content={`Search - ${props.title}`}/>
             <meta name="description" content="Rechercher des informations sur Star Wars"/>
 

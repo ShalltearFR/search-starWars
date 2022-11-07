@@ -1,6 +1,7 @@
 import { Box, Flex, Text, Image, Skeleton, VStack, HStack, Heading, Spinner }   from "@chakra-ui/react"
 import { useRouter }                                                            from "next/router"
 import Link                                                                     from 'next/link'
+import Error                                                                    from 'next/error'
 import { useState, useEffect }                                                  from "react"
 
 import NavBarSearch                                                             from "../Components/NavBar.search"
@@ -25,12 +26,12 @@ export default function Search(){
         if ((searchValue && searchType) !== "-1"){ // Corrige le soucis des states avec leurs changements async
             axios.get(`/${searchType}/?search=${searchValue}&page=${searchPage}`)
             .then(response=> setSearchResults(response.data))
-            .catch(err => console.log(err))
+            .catch(() => setSearchPage("1"))
         }
     }
 
     function changeType(e){ setSearchType(e.target.value) }
-    function changeValue(e){ setSearchValue(e.target.value) }
+    function changeValue(e){ setSearchValue(e.target.value);  setSearchPage("1")}
 
     // Initialise les variables
     useEffect(()=>{ 
@@ -56,7 +57,7 @@ export default function Search(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(()=> { searchResults !== "loading" && getImages() }, [searchResults])
 
-    function getImages(){
+    function getImages(){ // Recupère les images pour chaque vignette
         const promises = searchResults.results.map(el =>{
             let name
             if(el.title){ name = el.title }
@@ -90,16 +91,16 @@ export default function Search(){
             <Box mb={"2rem"}>
                 <NavBarSearch searchValue={ {get: searchValue, set: changeValue} } searchType={ {get: searchType, set: changeType} } mb={"1rem"}/>
                 {
-                    searchResults === "loading"
+                    searchResults === "loading" // Affichage chargement
                     ? <div>
                         <Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}>
-                            <Text as="span" fontSize={"1.5rem"}>Chargement</Text>
+                            <Text as="span" fontFamily="Finger Paint" fontSize={"1.5rem"}>Chargement</Text>
                             <Spinner />
                         </Flex>
                     </div>
-                    : searchResults.count !== 0
+                    : searchResults.count !== 0 // Si la recherche contient au moins 1 objet
                         ?<Box>
-                            <Heading as="h3" fontSize={"1rem"} color="gray" textAlign={"right"} w={"90vw"} >{searchResults.count} résultats</Heading>
+                            <Heading as="h3" fontSize={"1rem"} color="gray" textAlign={"right"} marginRight="2rem">{searchResults.count} résultats</Heading>
                             <Flex flexWrap={"wrap"} gap={"2rem"} justifyContent={"center"} mt={"1rem"}>
                             {
                                 searchResults.results.map( (el, i) =>{
@@ -108,15 +109,15 @@ export default function Search(){
 
                                     return(
                                         <Link key={el.url} href={`/details?type=${searchType}&value=${searchValue}&id=${id}&page=${searchPage}`} passHref>
-                                            <VStack w={"150px"} h={"200px"} border={"solid 1px black"} _hover={{background: "rgba(0,0,0,.25)"}} pb="10px">
+                                            <VStack w={"150px"} h={"200px"} border={"solid 1px black"} _hover={{background: "rgba(0,0,0,.25)", filter: "brightness(120%) contrast(200%)", transitionDuration: ".5s", transitionTimingFunction: "ease-in-out"}} pb="10px">
                                                 <Flex h={"140px"} justifyContent={"center"} alignItems={"center"}>{/* Image */}
                                                     {
                                                         searchImages === "-1"
                                                         ? <Skeleton h={"100%"}/>
-                                                        : <Image borderRadius={"25% 10%"} h={"90%"} w={"100px"} objectFit={"cover"} src={searchImages[i]} alt="image" loading="lazy"/>
+                                                        : <Image borderRadius={"25% 10%"} h={"90%"} w={"100px"} objectFit={"cover"} src={searchImages[i]} alt="image" fallbackSrc="/media/images/loading_icon.gif"/>
                                                     }
                                                 </Flex>
-                                                <Text display={"flex"} h={"30%"} fontSize={".8rem"} alignItems={"flex-end"} marginBlockEnd="10px" paddingInline={"5px"} textAlign={"center"} fontWeight="bold">
+                                                <Text display={"flex"} fontFamily="Finger Paint" h={"30%"} fontSize={".8rem"} alignItems={"flex-end"} marginBlockEnd="10px" paddingInline={"5px"} textAlign={"center"} fontWeight="bold">
                                                     { el.name && el.name }
                                                     { el.title && el.title }
                                                 </Text>
@@ -131,16 +132,19 @@ export default function Search(){
                                     searchResults.previous &&
                                     <Link href={`/search?type=${searchType}&value=${searchValue}&page=${Number(searchPage) - 1}`}><Image onClick={()=>setSearchResults("loading")} src="/media/images/triangle.svg" alt="page precedente"/></Link>
                                 }
-                                <Text as="span">page {searchPage}</Text>
+                                <Text as="span" fontFamily="Lexend" fontSize="1.5rem">page {searchPage}</Text>
                                 {
                                     searchResults.next &&
                                     <Link href={`/search?type=${searchType}&value=${searchValue}&page=${Number(searchPage) + 1}`}><Image onClick={()=>setSearchResults("loading")} src="/media/images/triangle.svg" alt="page suivante" transform={"rotate(180deg)"} /></Link>
                                 }
                             </HStack>
                         </Box>
-                        :<Box>
-                            <Heading as="h3" textAlign={"center"} mb={"2rem"} fontSize={"1.5rem"}>Il n’y a pas de résultats</Heading>
-                            <Image w={"90%"} marginInline={"auto"} src="/media/images/notFound.png" alt="image" />
+
+
+
+                        :<Box> {/* Indique que la recherche n'abouti a rien*/}
+                            <Heading as="h3" fontFamily="Finger Paint" textAlign={"center"} mb={"2rem"} fontSize={"1.5rem"}>Il n’y a pas de résultats</Heading>
+                            <Image w={["90%","90%","35vh"]} marginInline={"auto"} src="/media/images/notFound.png" alt="image" />
                         </Box>
                 }
             </Box>

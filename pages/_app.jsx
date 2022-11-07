@@ -2,6 +2,8 @@ import { Box, ChakraProvider } from '@chakra-ui/react'
 import axios from "axios"
 import { useRouter } from 'next/router'
 import Footer from '../Components/Footer'
+import Fonts from '../components/Fonts'
+import "../styles/globals.css"
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
@@ -9,13 +11,14 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ChakraProvider>
-      <Box minH="calc(100vh - 100px)">
+      <Box minH="calc(100vh - 100px)" overflow={"hidden"}>
       <Component {...pageProps} />
       </Box>
       {
         router.pathname !== "/" &&
         <Footer />
       }
+      <Fonts/>
     </ChakraProvider>
   )
 }

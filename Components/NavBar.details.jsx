@@ -10,7 +10,7 @@ export default function NavBar(props){
             <Link href={`/search?type=${type}&value=${value}&page=${page}`} passHref>
                 <Flex alignItems={"center"} gap={"10px"}>
                     <Image src="/media/images/triangle.svg" alt="triangle"/>
-                    <Text as="span" size={"20px"} color={"white"}>Retour aux résultats</Text>
+                    <Text as="span" fontFamily="Lexend" fontSize={"1.5rem"} color={"white"}>Retour aux résultats</Text>
                 </Flex>
             </Link>
         </VStack>

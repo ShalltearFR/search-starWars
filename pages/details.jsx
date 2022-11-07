@@ -19,7 +19,7 @@ export default function Details(){
             .then(response=> { 
                 setDetails(response.data)
             })
-            .catch(err => console.log(err))
+            .catch(()=> router.push("/404"))
         }
     }, [router])
 
@@ -49,6 +49,7 @@ export default function Details(){
         }
     }, [details])
 
+    // Recupère le nom si c'est un film ou autre
     function getTitleHead(){
         let name
         if(details.title){ name = details.title }
@@ -63,11 +64,11 @@ export default function Details(){
             <Box w={"100vw"}>
                 <NavBar mb={"2rem"} router={router} />
                 {
-                    details !== "loading"
+                    details !== "loading" // Affiche les infos
                     ? <Box>
                         <Heading textAlign={"center"} mb={"1rem"}>{details.name}</Heading>
-                        <Image borderRadius={"25% 10%"} src={image} alt="image" w={"90%"} marginInline={"auto"} mb={"1.5rem"}/>
-                        <Table w={"95vw"} overflow={"hidden"} marginInline="auto" mb={"2rem"}>
+                        <Image borderRadius={"25% 10%"} src={image} alt="image" w={["90vw","90vw","25vw"]} marginInline={"auto"} mb={"1.5rem"} fallbackSrc="/media/images/loading_icon.gif"/>
+                        <Table w={"90vw"} overflow={"hidden"} marginInline="auto" mb={"2rem"}>
                             <Tbody>
                                 {
                                     // Filtre certains mots et ne les affichent pas
@@ -90,7 +91,7 @@ export default function Details(){
                                                 return
                                         }
                                         return(
-                                            <Tr key={keyy} _hover={{background: "rgba(0, 0, 0, .25)"}}>
+                                            <Tr key={keyy} _hover={{background: "rgba(0, 0, 0, .25)", transitionDuration: ".5s", transitionTimingFunction: "ease-in-out"}}>
                                                 <Td textTransform={"capitalize"}>{ keyy.replace(/[_]/g," ") }</Td>
                                                 <Td>{value}</Td>
                                             </Tr>
@@ -100,8 +101,8 @@ export default function Details(){
                             </Tbody>
                         </Table>
                     </Box>
-                    :<Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}>
-                        <Text as="span" fontSize={"1.5rem"}>Chargement</Text>
+                    :<Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}> {/* Affiche un chargement en cours */}
+                        <Text as="span" fontFamily="Finger Paint" fontSize={"1.5rem"}>Chargement</Text>
                         <Spinner />
                     </Flex>
                 }

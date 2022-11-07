@@ -2,7 +2,7 @@ import { Box, ChakraProvider } from '@chakra-ui/react'
 import axios from "axios"
 import { useRouter } from 'next/router'
 import Footer from '../Components/Footer'
-import Fonts from '../components/Fonts'
+import Fonts from '../Components/Fonts.jsx'
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter()

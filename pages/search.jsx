@@ -2,9 +2,12 @@ import { Box, Flex, Text, Image, Skeleton, VStack, HStack, Heading, Spinner }   
 import { useRouter }                                                            from "next/router"
 import Link                                                                     from 'next/link'
 import { useState, useEffect }                                                  from "react"
+
 import NavBarSearch                                                             from "../Components/NavBar.search"
+import HeadComponent                                                            from "../Components/HeadComponent"
+
 import axios                                                                    from "axios"
-import { useDebounce }                                                          from 'use-debounce';
+import { useDebounce }                                                          from 'use-debounce'
 
 export default function Search(){
     const [searchValue, setSearchValue]     = useState("-1")
@@ -81,62 +84,66 @@ export default function Search(){
     }
 
     return(
-        <Box mb={"2rem"}>
-            <NavBarSearch searchValue={ {get: searchValue, set: changeValue} } searchType={ {get: searchType, set: changeType} } mb={"1rem"}/>
-            {
-                searchResults === "loading"
-                ? <div>
-                    <Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}>
-                        <Text as="span" fontSize={"1.5rem"}>Chargement</Text>
-                        <Spinner />
-                    </Flex>
-                </div>
-                : searchResults.count !== 0
-                    ?<Box>
-                        <Heading as="h3" fontSize={"1rem"} color="gray" textAlign={"right"} w={"90vw"} >{searchResults.count} résultats</Heading>
-                        <Flex flexWrap={"wrap"} gap={"2rem"} justifyContent={"center"} mt={"1rem"}>
-                        {
-                            searchResults.results.map( (el, i) =>{
-                                 let id = el.url.split("/")
-                                 id = id[id.length - 2]
+        <>
+            <HeadComponent title={` - résultats pour ${searchValue}`} path="/search"/>
 
-                                return(
-                                    <Link key={el.url} href={`/details?type=${searchType}&value=${searchValue}&id=${id}&page=${searchPage}`} passHref>
-                                        <VStack w={"150px"} h={"200px"} border={"solid 1px black"} _hover={{background: "rgba(0,0,0,.25)"}} pb="10px">
-                                            <Flex h={"140px"} justifyContent={"center"} alignItems={"center"}>{/* Image */}
-                                                {
-                                                    searchImages === "-1"
-                                                    ? <Skeleton h={"100%"}/>
-                                                    : <Image borderRadius={"25% 10%"} h={"90%"} w={"100px"} objectFit={"cover"} src={searchImages[i]} alt="image" loading="lazy"/>
-                                                }
-                                            </Flex>
-                                            <Text display={"flex"} h={"30%"} fontSize={".8rem"} alignItems={"flex-end"} marginBlockEnd="10px" paddingInline={"5px"} textAlign={"center"} fontWeight="bold">
-                                                { el.name && el.name }
-                                                { el.title && el.title }
-                                            </Text>
-                                        </VStack>
-                                    </Link>
-                                )   
-                            })
-                        }
+            <Box mb={"2rem"}>
+                <NavBarSearch searchValue={ {get: searchValue, set: changeValue} } searchType={ {get: searchType, set: changeType} } mb={"1rem"}/>
+                {
+                    searchResults === "loading"
+                    ? <div>
+                        <Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}>
+                            <Text as="span" fontSize={"1.5rem"}>Chargement</Text>
+                            <Spinner />
                         </Flex>
-                        <HStack mt={"2rem"} justifyContent="center" alignItems={"center"}>
+                    </div>
+                    : searchResults.count !== 0
+                        ?<Box>
+                            <Heading as="h3" fontSize={"1rem"} color="gray" textAlign={"right"} w={"90vw"} >{searchResults.count} résultats</Heading>
+                            <Flex flexWrap={"wrap"} gap={"2rem"} justifyContent={"center"} mt={"1rem"}>
                             {
-                                searchResults.previous &&
-                                <Link href={`/search?type=${searchType}&value=${searchValue}&page=${Number(searchPage) - 1}`}><Image onClick={()=>setSearchResults("loading")} src="/media/images/triangle.svg" alt="page precedente"/></Link>
+                                searchResults.results.map( (el, i) =>{
+                                    let id = el.url.split("/")
+                                    id = id[id.length - 2]
+
+                                    return(
+                                        <Link key={el.url} href={`/details?type=${searchType}&value=${searchValue}&id=${id}&page=${searchPage}`} passHref>
+                                            <VStack w={"150px"} h={"200px"} border={"solid 1px black"} _hover={{background: "rgba(0,0,0,.25)"}} pb="10px">
+                                                <Flex h={"140px"} justifyContent={"center"} alignItems={"center"}>{/* Image */}
+                                                    {
+                                                        searchImages === "-1"
+                                                        ? <Skeleton h={"100%"}/>
+                                                        : <Image borderRadius={"25% 10%"} h={"90%"} w={"100px"} objectFit={"cover"} src={searchImages[i]} alt="image" loading="lazy"/>
+                                                    }
+                                                </Flex>
+                                                <Text display={"flex"} h={"30%"} fontSize={".8rem"} alignItems={"flex-end"} marginBlockEnd="10px" paddingInline={"5px"} textAlign={"center"} fontWeight="bold">
+                                                    { el.name && el.name }
+                                                    { el.title && el.title }
+                                                </Text>
+                                            </VStack>
+                                        </Link>
+                                    )   
+                                })
                             }
-                            <Text as="span">page {searchPage}</Text>
-                            {
-                                searchResults.next &&
-                                <Link href={`/search?type=${searchType}&value=${searchValue}&page=${Number(searchPage) + 1}`}><Image onClick={()=>setSearchResults("loading")} src="/media/images/triangle.svg" alt="page suivante" transform={"rotate(180deg)"} /></Link>
-                            }
-                        </HStack>
-                    </Box>
-                    :<Box>
-                        <Heading as="h3" textAlign={"center"} mb={"2rem"} fontSize={"1.5rem"}>Il n’y a pas de résultats</Heading>
-                        <Image w={"90%"} marginInline={"auto"} src="/media/images/notFound.png" alt="image" />
-                    </Box>
-            }
-        </Box>
+                            </Flex>
+                            <HStack mt={"2rem"} justifyContent="center" alignItems={"center"}>
+                                {
+                                    searchResults.previous &&
+                                    <Link href={`/search?type=${searchType}&value=${searchValue}&page=${Number(searchPage) - 1}`}><Image onClick={()=>setSearchResults("loading")} src="/media/images/triangle.svg" alt="page precedente"/></Link>
+                                }
+                                <Text as="span">page {searchPage}</Text>
+                                {
+                                    searchResults.next &&
+                                    <Link href={`/search?type=${searchType}&value=${searchValue}&page=${Number(searchPage) + 1}`}><Image onClick={()=>setSearchResults("loading")} src="/media/images/triangle.svg" alt="page suivante" transform={"rotate(180deg)"} /></Link>
+                                }
+                            </HStack>
+                        </Box>
+                        :<Box>
+                            <Heading as="h3" textAlign={"center"} mb={"2rem"} fontSize={"1.5rem"}>Il n’y a pas de résultats</Heading>
+                            <Image w={"90%"} marginInline={"auto"} src="/media/images/notFound.png" alt="image" />
+                        </Box>
+                }
+            </Box>
+        </>
     )
 }

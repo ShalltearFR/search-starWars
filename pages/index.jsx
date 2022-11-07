@@ -1,5 +1,6 @@
 import { Flex, Image, Input, Select, Text } from "@chakra-ui/react";
 import { useRouter }                        from 'next/router'
+import HeadComponent from "../Components/HeadComponent";
 
 export default function Home() {
   const router = useRouter()
@@ -14,6 +15,8 @@ export default function Home() {
   }
 
   return (
+    <>
+    <HeadComponent title={""} path="/"/>
     
     <Flex as="header" h={"100vh"} justifyContent={"center"} alignItems={"center"} flexDirection={"column"} background={"linear-gradient(180deg, #000000 50%, #FFE81F 50%)"}>
       <Flex textAlign={"center"} justifyContent={"center"} flexDirection={"column"} marginInline={"auto"}>
@@ -30,5 +33,6 @@ export default function Home() {
         </Select>
       </Flex>
     </Flex>
+    </>
   )
 }

@@ -1,6 +1,7 @@
 import { Box, Heading, Image, Table, Tbody, Td, Tr, Flex, Text, Spinner }   from "@chakra-ui/react";
 import NavBar                                                               from "../Components/NavBar.details";
 import { useRouter }                                                        from "next/router";
+import HeadComponent                                                        from "../Components/HeadComponent";
 import { useEffect, useState }                                              from "react";
 import axios                                                                from "axios";
 
@@ -48,58 +49,63 @@ export default function Details(){
         }
     }, [details])
 
+    function getTitleHead(){
+        let name
+        if(details.title){ name = details.title }
+        else{ name = details.name }
+        return( name )
+    }
+
     return(
-        <Box w={"100vw"}>
-            <NavBar mb={"2rem"} router={router} />
-            {
-                details !== "loading"
-                ? <Box>
-                    <Heading textAlign={"center"} mb={"1rem"}>{details.name}</Heading>
-                    <Image borderRadius={"25% 10%"} src={image} alt="image" w={"90%"} marginInline={"auto"} mb={"1.5rem"}/>
-                    <Table w={"95vw"} overflow={"hidden"} marginInline="auto" mb={"2rem"}>
-                        <Tbody>
-                            {
-                                // Filtre certains mots et ne les affichent pas
-                                Object.entries(details).map(entry => {
-                                    const [keyy, value] = entry
-                                    switch (keyy) {
-                                        case 'films':
-                                        case 'created':
-                                        case 'edited':
-                                        case 'url':
-                                        case 'homeworld':
-                                        case 'starships':
-                                        case 'characters':
-                                        case 'planets':
-                                        case 'vehicles':
-                                        case 'species':
-                                        case 'pilots':
-                                        case 'residents':
-                                        case 'people':
-                                            return
-                                    }
-                                    return(
-                                        <Tr key={keyy} _hover={{background: "rgba(0, 0, 0, .25)"}}>
-                                            <Td textTransform={"capitalize"}>{ keyy.replace(/[_]/g," ") }</Td>
-                                            <Td>{value}</Td>
-                                        </Tr>
+        <>
+            <HeadComponent title={`- ${getTitleHead()}`} path="/details"/>
+
+            <Box w={"100vw"}>
+                <NavBar mb={"2rem"} router={router} />
+                {
+                    details !== "loading"
+                    ? <Box>
+                        <Heading textAlign={"center"} mb={"1rem"}>{details.name}</Heading>
+                        <Image borderRadius={"25% 10%"} src={image} alt="image" w={"90%"} marginInline={"auto"} mb={"1.5rem"}/>
+                        <Table w={"95vw"} overflow={"hidden"} marginInline="auto" mb={"2rem"}>
+                            <Tbody>
+                                {
+                                    // Filtre certains mots et ne les affichent pas
+                                    Object.entries(details).map(entry => {
+                                        const [keyy, value] = entry
+                                        switch (keyy) {
+                                            case 'films':
+                                            case 'created':
+                                            case 'edited':
+                                            case 'url':
+                                            case 'homeworld':
+                                            case 'starships':
+                                            case 'characters':
+                                            case 'planets':
+                                            case 'vehicles':
+                                            case 'species':
+                                            case 'pilots':
+                                            case 'residents':
+                                            case 'people':
+                                                return
+                                        }
+                                        return(
+                                            <Tr key={keyy} _hover={{background: "rgba(0, 0, 0, .25)"}}>
+                                                <Td textTransform={"capitalize"}>{ keyy.replace(/[_]/g," ") }</Td>
+                                                <Td>{value}</Td>
+                                            </Tr>
                                         )
-                                })
-                            }
-                        </Tbody>
-                    </Table>
-                </Box>
-                :<Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}>
-                    <Text as="span" fontSize={"1.5rem"}>Chargement</Text>
-                    <Spinner />
-                </Flex>
-            }
-
-
-
-
-
-            
-        </Box>
+                                    })
+                                }
+                            </Tbody>
+                        </Table>
+                    </Box>
+                    :<Flex justifyContent={"center"} alignItems={"center"} gap={".5rem"}>
+                        <Text as="span" fontSize={"1.5rem"}>Chargement</Text>
+                        <Spinner />
+                    </Flex>
+                }
+            </Box>
+        </>
     )
 }

@@ -30,8 +30,8 @@ export default function Search(){
         }
     }
 
-    function changeType(e){ setSearchType(e.target.value) }
-    function changeValue(e){ setSearchValue(e.target.value);  setSearchPage("1")}
+    function changeType(e){ setSearchType(e.target.value); setSearchPage("1") }
+    function changeValue(e){ setSearchValue(e.target.value); setSearchPage("1") }
 
     // Initialise les variables
     useEffect(()=>{ 
@@ -50,6 +50,7 @@ export default function Search(){
     // Lance la recherche à l'initialisation et à chaque changements
     useEffect(()=>{
         setSearchResults("loading")
+        setSearchImages("-1")
         search()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchValueDebounce, searchType, searchPage])
